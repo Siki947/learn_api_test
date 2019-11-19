@@ -1,0 +1,100 @@
+{
+  "ad4e76dbef9849cd87f4ef7178042716" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 1,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "3fab73c51c0a455b",
+      "status" : "skipped",
+      "statusDetails" : "Skipped: at least mymodule-1.1 required",
+      "time" : {
+        "start" : 1572599081174,
+        "stop" : 1572599081174,
+        "duration" : 0
+      }
+    } ]
+  },
+  "506e242cd50716cd6e69f614aaf1e626" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 1,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "68a0910d7eca1e2b",
+      "status" : "skipped",
+      "statusDetails" : "Skipped: unsupported configuration",
+      "time" : {
+        "start" : 1572599081180,
+        "stop" : 1572599081180,
+        "duration" : 0
+      }
+    } ]
+  },
+  "d922783b5f2ac8b96e442ee2753069d6" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "e7275f9767eda61b",
+      "status" : "passed",
+      "time" : {
+        "start" : 1572599081178,
+        "stop" : 1572599081178,
+        "duration" : 0
+      }
+    } ]
+  },
+  "d04feace14f204e4fdf0ac39168d7c65" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 1,
+      "passed" : 0,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "6feebba1397972b4",
+      "status" : "skipped",
+      "statusDetails" : "Skipped: no way of currently testing this",
+      "time" : {
+        "start" : 1572599081120,
+        "stop" : 1572599081120,
+        "duration" : 0
+      }
+    } ]
+  },
+  "d1c75334934839a5738ce240f30a27d5" : {
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 0,
+      "passed" : 1,
+      "unknown" : 0,
+      "total" : 1
+    },
+    "items" : [ {
+      "uid" : "95d5c9d2462ce60",
+      "status" : "passed",
+      "time" : {
+        "start" : 1572599081173,
+        "stop" : 1572599081173,
+        "duration" : 0
+      }
+    } ]
+  }
+}

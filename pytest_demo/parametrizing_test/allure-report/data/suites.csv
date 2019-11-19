@@ -1,0 +1,6 @@
+"Status","Name","Duration in ms","Description"
+"passed","parametrizing_test.assert_test#test_04","0",""
+"skipped","parametrizing_test.assert_test#test_function","0",""
+"passed","parametrizing_test.assert_test#test_02","0",""
+"skipped","parametrizing_test.assert_test#test_01","0",""
+"skipped","parametrizing_test.assert_test#test_03","0",""

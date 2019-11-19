@@ -1,0 +1,15 @@
+{
+  "total" : 1,
+  "items" : [ {
+    "uid" : "73a1056e0a82eea9409bd8e582ecf155",
+    "name" : "parametrizing_test",
+    "statistic" : {
+      "failed" : 0,
+      "broken" : 0,
+      "skipped" : 3,
+      "passed" : 2,
+      "unknown" : 0,
+      "total" : 5
+    }
+  } ]
+}

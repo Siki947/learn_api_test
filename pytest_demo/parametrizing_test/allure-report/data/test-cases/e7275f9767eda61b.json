@@ -1,0 +1,52 @@
+{
+  "uid" : "e7275f9767eda61b",
+  "name" : "test_04",
+  "fullName" : "parametrizing_test.assert_test#test_04",
+  "historyId" : "d922783b5f2ac8b96e442ee2753069d6",
+  "time" : {
+    "start" : 1572599081178,
+    "stop" : 1572599081178,
+    "duration" : 0
+  },
+  "status" : "passed",
+  "flaky" : false,
+  "beforeStages" : [ ],
+  "afterStages" : [ ],
+  "labels" : [ {
+    "name" : "parentSuite",
+    "value" : "parametrizing_test"
+  }, {
+    "name" : "suite",
+    "value" : "assert_test"
+  }, {
+    "name" : "host",
+    "value" : "PC-20190923VVHE"
+  }, {
+    "name" : "thread",
+    "value" : "66684-MainThread"
+  }, {
+    "name" : "framework",
+    "value" : "pytest"
+  }, {
+    "name" : "language",
+    "value" : "cpython3"
+  }, {
+    "name" : "package",
+    "value" : "parametrizing_test.assert_test"
+  }, {
+    "name" : "resultFormat",
+    "value" : "allure2"
+  } ],
+  "parameters" : [ ],
+  "links" : [ ],
+  "hidden" : false,
+  "retry" : false,
+  "extra" : {
+    "severity" : "normal",
+    "retries" : [ ],
+    "categories" : [ ],
+    "tags" : [ ]
+  },
+  "source" : "e7275f9767eda61b.json",
+  "parameterValues" : [ ]
+}
