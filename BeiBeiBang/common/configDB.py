@@ -2,10 +2,11 @@ import pymysql
 import conf.readConfig as readConfig
 from common.Log import MyLog as Log
 
+
 localReadConfig = readConfig.ReadConfig()
 
 
-class MyDB:
+class MyDB():
     global host, username, password, port, database, config
     host = localReadConfig.get_db("host")
     username = localReadConfig.get_db("username")
@@ -40,16 +41,15 @@ class MyDB:
         except ConnectionError as ex:
             self.logger.error(str(ex))
 
-    def executeSQL(self, sql, params):
+    def executeSQL(self, sql):
         """
         execute sql
         :param sql:
         :return:
         """
-        self.connectDB()
         try:
             # executing sql
-            self.cursor.execute(sql, params)
+            self.cursor.execute(sql)
             # executing by committing to DB
             self.db.commit()
         except:

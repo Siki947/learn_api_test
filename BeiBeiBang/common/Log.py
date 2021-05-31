@@ -23,11 +23,15 @@ class Log:
         self.logger.setLevel(logging.INFO)
 
         # defined handler
-        handler = logging.FileHandler(os.path.join(logPath, "output.log"),encoding='utf-8')
+        fh = logging.FileHandler(os.path.join(logPath, "output.log"),encoding='utf-8')
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
         # defined formatter
         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
+        fh.setFormatter(formatter)
+        ch.setFormatter(formatter)
+        self.logger.addHandler(fh)
+        self.logger.addHandler(ch)
 
     def get_logger(self):
         """
@@ -107,9 +111,9 @@ class MyLog:
 
         return MyLog.log
 
-if __name__ == "__main__":
-    log = MyLog.get_log()
-    logger = log.get_logger()
-    logger.debug("test debug")
-    logger.info("test info")
+# if __name__ == "__main__":
+#     log = MyLog.get_log()
+#     logger = log.get_logger()
+#     logger.debug("test debug")
+#     logger.info("test info")
 

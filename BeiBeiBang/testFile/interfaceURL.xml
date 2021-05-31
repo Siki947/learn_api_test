@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<interface>
+    <url name="webLogin" >
+        api/portal/auth/login
+    </url>
+
+    <url name="miniLogin" >
+        api/sloop/userInfo/login
+    </url>
+
+    <url name="getGussLike">
+        api/sloop/extend/showcase/find/getGuessLike
+    </url>
+
+    <url name="getCart">
+        api/sloop/cart/getCart
+    </url>
+
+     <url name="getTotalQuantity">
+        api/sloop/cart/totalQuantity/getTotalQuantity
+     </url>
+
+     <url name="getGoodsSku">
+        api/sloop/storeGoodsSku/xcx/list/full/getGoodsSku
+     </url>
+
+</interface>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<page>
+    <database name="prd">
+        <table name="sale_order">
+            <!--查询BD下小b用户的订单-->
+            <sql id="select_b_order">
+                SELECT s.user_store_id,s.user_id user_id,s.sale_order_no sale_order_id,(s.final_total_amount+sodu.balance_use+sodu.redpacket_use) final_amount,sol.create_time pay_time FROM `sale_order` s LEFT JOIN sale_order_discounts_use sodu ON s.sale_order_id=sodu.sale_order_id LEFT JOIN sale_order_log sol ON s.sale_order_id = sol.sale_order_id WHERE sol.sale_order_status = "PRE_DELIVER" AND s.sale_order_type ="A" AND DATE_FORMAT(sol.create_time,"/%Y-/%m")="%s" AND s.user_id IN (SELECT user_info_id FROM `store` WHERE bd_id=%s AND deleted=0)
+            </sql>
+            <!--查询BD下小b用户某月下单总金额-->
+            <sql id="select_b_order_sum">
+                SELECT s.user_store_id,SUM( s.final_total_amount + sodu.balance_use + sodu.redpacket_use ) final_amount FROM `sale_order` s LEFT JOIN sale_order_discounts_use sodu ON s.sale_order_id = sodu.sale_order_id LEFT JOIN sale_order_log sol ON s.sale_order_id = sol.sale_order_id WHERE sol.sale_order_status = "PRE_DELIVER" AND s.sale_order_type = "A" AND DATE_FORMAT(sol.create_time,"%%Y-%%m")="%s" AND s.user_id IN ( SELECT user_info_id FROM `store` WHERE bd_id IN %s AND deleted = 0 ) GROUP BY user_store_id
+            </sql>
+            <!--查询xx天内的订单id、金额、优惠-->
+            <sql id="select_sale_order_in_day">
+                SELECT s.sale_order_id,s.vip_discount_amount,s.discount_amount,s.final_total_amount,u.balance_use,u.redpacket_use FROM sale_order s LEFT JOIN sale_order_discounts_use u ON s.sale_order_id=u.sale_order_id WHERE DATEDIFF(NOW(),s.create_time)&lt;=7;
+            </sql>
+        </table>
+        <table name="sale_order_item">
+            <!--查询订单的item明细-->
+            <sql id="select_sale_order_item_detail">
+                SELECT sale_order_id,vip_discount_amount,discount_amount,final_amount,redpacket_amount,balance_amount FROM sale_order_item WHERE sale_order_id = %s;
+            </sql>
+            <!--查询item中订单折扣金额总额，现金总额，红包余额总额-->
+            <sql id="select_sale_order_item_sum">
+                SELECT sale_order_id,SUM(vip_discount_amount) vip_discount_amount,SUM(discount_amount) discount_amount,SUM(final_amount) final_amount ,SUM(redpacket_amount) redpacket_amount,SUM(balance_amount) balance_amount FROM sale_order_item WHERE sale_order_id =%s;
+            </sql>
+            <!--查询订单item折扣金额+现金+红包余额-->
+            <sql id="select_sale_order_item_compare">
+                SELECT sale_order_id,sale_order_item_id,(goods_count*goods_price) item_price,(vip_discount_amount+discount_amount+final_amount+redpacket_amount+balance_amount) total_amount FROM sale_order_item WHERE sale_order_id=%s
+            </sql>
+        </table>
+        <table name="sale_package_goods">
+            <!--查询有效BD中xx月发货的包裹-->
+            <sql id="select_package_goods_in_month">
+                SELECT user_id, s.bd_id,CONCAT(number, "-", sale_order_no) r,SUM(final_amount + balance_amount + redpacket_amount) amount,spg.finish_time FROM `sale_package_goods` spg LEFT JOIN store s ON spg.user_id = s.user_info_id WHERE s.bd_id IN ( SELECT user_id FROM `wechat_commission` WHERE commission_date = "%s" AND deleted = 0 AND new_user_commission != 0 AND old_user_commission != 0 AND user_id IN ( SELECT user_id FROM wechat_member WHERE `enable` = 1 AND deleted = 0 ) ) AND DATE_FORMAT(spg.create_time, "%%Y-%%m") = "%s" GROUP BY r
+            </sql>
+        </table>
+        <table name="return_order">
+            <!--查询某月某个bd下小b的完成退货和退款金额-->
+            <sql id="select_b_return_order">
+                SELECT r.store_id user_store_id,r.create_user_id user_id,r.return_order_no,r.final_total_amount return_amount,r.finish_time FROM `return_order` r WHERE create_user_id IN ( SELECT user_info_id FROM `store` WHERE bd_id = %s AND deleted = 0 ) AND DATE_FORMAT(r.finish_time,"/%Y-/%m")="%s" AND r.return_order_status = "FINISH" AND r.return_order_type != "EXCHANGE";
+            </sql>
+            <!--查询某月某个bd下所有小b的完成退货和退款的总金额-->
+            <sql id="select_b_return_order_sum">
+                SELECT r.store_id user_store_id,r.create_user_id user_id,SUM(r.final_total_amount) return_amount FROM `return_order` r WHERE create_user_id IN ( SELECT user_info_id FROM `store` WHERE bd_id = %s AND deleted = 0 ) AND DATE_FORMAT(r.finish_time,"/%Y-/%m")="%s" AND r.return_order_status = "FINISH" AND r.return_order_type != "EXCHANGE" GROUP BY r.store_id;
+            </sql>
+        </table>
+
+        <table name="consumer_sale_order">
+            <sql id="select_c_order">
+                SELECT c.sale_order_no,c.store_id,s.user_info_id,c.total_trade_price final_amount,c.paid_time FROM `consumer_sale_order` c LEFT JOIN store s ON c.store_id=s.store_id WHERE c.store_id IN (SELECT store_id FROM `store` WHERE bd_id =%s AND deleted = 0) AND DATE_FORMAT(c.paid_time,"/%Y-/%m")="%s" ;
+            </sql>
+            <sql id="select_c_order_sum">
+                SELECT c.store_id,s.user_info_id,SUM(c.total_trade_price) final_amount FROM `consumer_sale_order` c LEFT JOIN store s ON c.store_id = s.store_id WHERE c.store_id IN ( SELECT store_id FROM `store` WHERE bd_id =% s AND deleted = 0 ) AND DATE_FORMAT(c.paid_time,"/%Y-/%m")="%s" GROUP BY c.store_id;
+            </sql>
+        </table>
+        <table name="consumer_return_order">
+            <sql id="select_c_return_order">
+                SELECT c.store_id,c.return_order_no,c.final_total_amount return_amount,c.finish_time FROM consumer_return_order c WHERE c.store_id IN (SELECT store_id FROM `store` WHERE bd_id =%s AND deleted = 0) AND DATE_FORMAT(c.finish_time,"/%Y-/%m")="%s"
+            </sql>
+            <sql id="select_c_return_order_sum">
+                SELECT c.store_id,SUM(c.final_total_amount) return_amount FROM consumer_return_order c WHERE c.store_id IN ( SELECT store_id FROM `store` WHERE bd_id =% s AND deleted = 0 ) AND DATE_FORMAT(c.finish_time,"/%Y-/%m") ="%s" ORDER BY c.store_id
+            </sql>
+        </table>
+        <table name="bds_order_estimate">
+            <sql id="select_b_estimate_order">
+                SELECT boe.store_id ,boe.final_amount final_amount,boe.sale_order_no,boe.commission_rate,boe.commission_money,boe.`status`,boe.pay_time  FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=1;
+            </sql>
+            <sql id="select_b_estimate_order_sum">
+                SELECT boe.store_id,SUM(boe.final_amount) final_amount  FROM `bds_order_estimate` boe WHERE  DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND bd_id IN %s AND type=1 ORDER BY boe.store_id
+            </sql>
+            <sql id="select_c_estimate_order">
+                SELECT boe.store_id ,boe.final_amount final_amount,boe.sale_order_no,boe.commission_rate,boe.commission_money,boe.`status`,boe.pay_time  FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=3;
+            </sql>
+            <sql id="select_c_estimate_order_sum">
+                SELECT boe.store_id,SUM(boe.final_amount) final_amount FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=3 ORDER BY boe.store_id
+            </sql>
+            <sql id="select_b_estimate_return_order">
+                SELECT boe.store_id ,boe.final_amount final_amount,boe.return_order_no,boe.commission_rate,boe.commission_money,boe.`status`,boe.pay_time finish_time  FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=2;
+            </sql>
+            <sql id="select_b_estimate_return_order_sum">
+                SELECT boe.store_id,SUM(boe.final_amount) final_amount FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=2 ORDER BY boe.store_id
+            </sql>
+            <sql id="select_c_estimate_return_order">
+                SELECT boe.store_id ,boe.final_amount final_amount,boe.return_order_no,boe.commission_rate,boe.commission_money,boe.`status`,boe.pay_time finish_time  FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=4;
+            </sql>
+            <sql id="select_c_estimate_return_order_sum">
+                SELECT boe.store_id,SUM(boe.final_amount) final_amount FROM `bds_order_estimate` boe WHERE bd_id=%s AND DATE_FORMAT(pay_time,"%%Y-%%m")="%s" AND type=4 ORDER BY boe.store_id
+            </sql>
+        </table>
+        <table name="component_showcase">
+            <sql id="select_guess_like_showcase_id">
+                SELECT showcase_id FROM `component_showcase` WHERE `code`="GUESS_LIKE" AND deleted=0
+            </sql>
+        </table>
+
+        <table name="component_showcase_barrier">
+            <sql id="select_guess_like_store_goods_id">
+               SELECT store_goods_id FROM `component_showcase_barrier` WHERE showcase_id=%s AND shelves="ON_SHELVES" AND deleted=0;
+            </sql>
+        </table>
+        <table name="store_goods">
+            <sql id="select_goods_stock">
+                SELECT goods_code,real_stock,real_lock_stock FROM `store_goods` WHERE store_id=1 AND deleted=0 AND shelves="ON_SHELVES" AND stock_type="REAL_STOCK";
+            </sql>
+        </table>
+        <table name="store_goods_sku">
+            <sql id="select_goods_id_and_sku_id">
+                SELECT goods_id,goods_sku_id,(real_stock-real_lock_stock) realStock FROM `store_goods_sku` WHERE shelves = "ON_SHELVES" AND goods_id IN ( SELECT s.goods_id FROM store_goods s LEFT JOIN goods g ON s.goods_id = g.goods_id WHERE s.store_id = 1 AND s.deleted = 0 AND s.shelves = "ON_SHELVES" AND g.deleted = 0 ) ORDER BY create_time DESC LIMIT 500;
+            </sql>
+        </table>
+        <table name="wechat_commission">
+            <sql id="select_effective_BD">
+                SELECT user_id,first_condition,first_commission,min_reward,max_reward,new_user_commission,old_user_commission FROM `wechat_commission` WHERE commission_date = "%s" AND deleted = 0 AND new_user_commission != 0 AND old_user_commission != 0 AND user_id IN ( SELECT user_id FROM wechat_member WHERE `enable`=1 AND deleted=0);
+            </sql>
+        </table>
+    </database>
+</page>
